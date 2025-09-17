@@ -1,0 +1,100 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  image     String?
+  emailVerified DateTime?
+  items     Item[]
+  audits    Audit[]
+  accounts  Account[]   // 🔥 eklendi
+  sessions  Session[]   // 🔥 eklendi
+  createdAt DateTime  @default(now())
+}
+
+model Item {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  amount      Float
+  tags        String[] // Postgres ARRAY
+  riskScore   Int      @default(0)
+  status      Status   @default(NEW)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
+  audits Audit[]
+}
+
+model Audit {
+  id        String   @id @default(cuid())
+  action    String
+  field     String?
+  oldValue  String?
+  newValue  String?
+  createdAt DateTime @default(now())
+
+  item   Item?   @relation(fields: [itemId], references: [id])
+  itemId String?
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
+}
+
+model Rule {
+  id        String   @id @default(cuid())
+  name      String
+  condition String   // JSON veya text (ör: "amount > 1000")
+  score     Int
+  createdAt DateTime @default(now())
+}
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider           String
+  providerAccountId  String
+  type               String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires      DateTime
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+
+enum Status {
+  NEW
+  IN_REVIEW
+  APPROVED
+  REJECTED
+}
