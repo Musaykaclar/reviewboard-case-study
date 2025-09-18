@@ -1,10 +1,10 @@
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthOptions } from "next-auth"
 import GitHubProvider from "next-auth/providers/github"
 import EmailProvider from "next-auth/providers/email"
-import { PrismaAdapter } from "@next-auth/prisma-adapter" // 🔥 düzeltildi
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { prisma } from "../../../../../lib/prisma"
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GitHubProvider({
@@ -23,11 +23,15 @@ const handler = NextAuth({
   callbacks: {
     async session({ session, token }) {
       if (token.sub && session.user) {
+        // User id'yi session içine ekle
         session.user.id = token.sub
       }
       return session
     },
   },
-})
+}
+
+// NextAuth handler
+const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }

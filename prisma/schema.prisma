@@ -51,11 +51,15 @@ model Audit {
 }
 
 model Rule {
-  id        String   @id @default(cuid())
-  name      String
-  condition String   // JSON veya text (ör: "amount > 1000")
-  score     Int
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  condition   String   // JSON condition (ör: {"field": "amount", "operator": ">", "value": 1000})
+  score       Int      // Risk score to add if condition matches
+  isActive    Boolean  @default(true)
+  priority    Int      @default(0) // Higher priority rules run first
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 model Account {
   id                 String  @id @default(cuid())
