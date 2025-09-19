@@ -2,32 +2,9 @@ import { NextResponse } from "next/server"
 import { prisma } from "../../../../../lib/prisma"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { calculateRiskByRules } from "../../../../../lib/rules"
 
-// Basit risk skoru hesaplama (if-else kuralları)
-function calculateRiskScore(item: any): number {
-  let risk = 0
-
-  // amount kuralı
-  if (item.amount > 10000) risk = 80
-  else if (item.amount > 5000) risk = 50
-  else risk = 20
-
-  // tag kuralları
-  const tags: string[] = Array.isArray(item.tags) ? item.tags.map((t: string) => String(t).toLowerCase()) : []
-  if (tags.includes('urgent')) risk += 20
-  if (tags.includes('fraud')) risk = 100
-  if (tags.includes('trusted')) risk -= 20
-
-  // description kuralları (opsiyonel)
-  const desc = String(item.description || '').toLowerCase()
-  if (desc.includes('suspicious')) risk += 30
-  if (desc.includes('verified')) risk -= 10
-
-  // 0-100 aralığı
-  if (risk < 0) risk = 0
-  if (risk > 100) risk = 100
-  return risk
-}
+// Risk skoru hesaplama artık Rule motoruna taşındı
 
 // POST - Risk score hesapla ve güncelle
 export async function POST(
@@ -56,8 +33,8 @@ export async function POST(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
-    // Risk score hesapla (basit kural motoru)
-    const newRiskScore = calculateRiskScore(item)
+    // Risk score hesapla (aktif kurallar)
+    const newRiskScore = await calculateRiskByRules(item)
 
     // Item'ı güncelle
     const updatedItem = await prisma.item.update({

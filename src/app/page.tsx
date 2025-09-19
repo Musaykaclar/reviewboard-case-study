@@ -72,9 +72,7 @@ export default function HomePage() {
               <h1 className="login-title">
                 ReviewBoard
               </h1>
-              <p className="text-gray-700 text-sm font-medium">
-                Renkli dünyaya hoş geldiniz! 🌈
-              </p>
+              
             </div>
 
             {/* Login buttons - Çok renkli */}
@@ -100,9 +98,7 @@ export default function HomePage() {
 
             {/* Alt bilgi */}
             <div className="mt-6 text-center">
-              <p className="text-gray-600 text-xs font-medium">
-                ✨ Renkli deneyimin keyfini çıkarın! ✨
-              </p>
+              
             </div>
           </div>
         ) : (

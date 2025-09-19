@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { prisma } from "../../../../lib/prisma"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { calculateRiskByRules } from "../../../../lib/rules"
 
 export async function GET(req: Request) {
   try {
@@ -11,6 +12,9 @@ export async function GET(req: Request) {
     }
 
     const userEmail = session.user?.email
+    if (!userEmail) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
 
     const items = await prisma.item.findMany({
       where: {
@@ -66,29 +70,8 @@ export async function POST(req: Request) {
       },
     })
 
-    // 3) Basit kural motoru ile risk skoru hesapla
-    const simpleCalculateRisk = (createdItem: any): number => {
-      let risk = 0
-      // amount
-      if (createdItem.amount > 10000) risk = 80
-      else if (createdItem.amount > 5000) risk = 50
-      else risk = 20
-      // tags
-      const tagsLc: string[] = Array.isArray(createdItem.tags) ? createdItem.tags.map((t: string) => String(t).toLowerCase()) : []
-      if (tagsLc.includes('urgent')) risk += 20
-      if (tagsLc.includes('fraud')) risk = 100
-      if (tagsLc.includes('trusted')) risk -= 20
-      // description
-      const desc = String(createdItem.description || '').toLowerCase()
-      if (desc.includes('suspicious')) risk += 30
-      if (desc.includes('verified')) risk -= 10
-      // clamp
-      if (risk < 0) risk = 0
-      if (risk > 100) risk = 100
-      return risk
-    }
-
-    const newRiskScore = simpleCalculateRisk(item)
+    // 3) Rule motoru ile risk skoru hesapla (aktif kurallar)
+    const newRiskScore = await calculateRiskByRules(item)
 
     // 4) Item'ı risk skoru ile güncelle
     const updatedItem = await prisma.item.update({
