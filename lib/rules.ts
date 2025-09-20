@@ -40,9 +40,9 @@ function safeParseCondition(condition: string): RuleCondition {
   }
 }
 
-export function evaluateRuleOnItem(rule: CompiledRule, item: any): boolean {
+export function evaluateRuleOnItem(rule: CompiledRule, item: Record<string, unknown>): boolean {
   const { field, operator, value } = rule.condition
-  const fieldValue = (item as any)[field]
+  const fieldValue = item[field]
 
   switch (field) {
     case "amount": {
@@ -74,7 +74,7 @@ export function evaluateRuleOnItem(rule: CompiledRule, item: any): boolean {
   }
 }
 
-export async function calculateRiskByRules(item: any): Promise<number> {
+export async function calculateRiskByRules(item: Record<string, unknown>): Promise<number> {
   const rules = await fetchActiveRules()
 
   // Kural yoksa eski basit hesaplamaya geri dön (fallback)
@@ -95,7 +95,7 @@ export async function calculateRiskByRules(item: any): Promise<number> {
 }
 
 // Eski if-else kuralları ile yedek risk hesabı
-function simpleFallbackRisk(item: any): number {
+function simpleFallbackRisk(item: Record<string, unknown>): number {
   let risk = 0
   const amount = Number(item.amount || 0)
   if (amount > 10000) risk = 80

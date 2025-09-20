@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "../../../../../lib/prisma"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
@@ -8,8 +8,8 @@ import { calculateRiskByRules } from "../../../../../lib/rules"
 
 // POST - Risk score hesapla ve güncelle
 export async function POST(
-  req: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -17,7 +17,7 @@ export async function POST(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const itemId = params.id
+    const { id: itemId } = context.params
 
     // Item'ı bul
     const item = await prisma.item.findUnique({

@@ -4,14 +4,12 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { 
   Package, 
-  Shield, 
   Settings, 
   LogOut, 
   Home, 
   Star,
   CheckCircle,
-  BarChart3,
-  Users
+  BarChart3
 } from "lucide-react"
 
 export default function DashboardPage() {
@@ -121,7 +119,7 @@ export default function DashboardPage() {
             </h1>
             <p className="dashboard-content-subtitle">
               ReviewBoard yönetim paneline hoş geldin. Buradan tüm işlemlerini yönetebilir, 
-              item'larını takip edebilir ve sistem ayarlarını düzenleyebilirsin.
+              item&apos;larını takip edebilir ve sistem ayarlarını düzenleyebilirsin.
             </p>
           </div>
 
@@ -129,7 +127,7 @@ export default function DashboardPage() {
           <div className="dashboard-welcome-card">
             <h2 className="dashboard-welcome-title">
               <Star style={{ width: '24px', height: '24px' }} />
-              Dashboard'a Genel Bakış
+              Dashboard&apos;a Genel Bakış
             </h2>
             <p className="dashboard-welcome-text">
               Sol menüden istediğin bölüme geçebilirsin. Her bölüm farklı işlevler sunuyor:

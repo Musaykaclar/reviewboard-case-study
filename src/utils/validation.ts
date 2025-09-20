@@ -39,7 +39,7 @@ export const validateItemForm = (formData: {
 export const validateRuleForm = (formData: {
   name: string
   score: number
-  condition: any
+  condition: string
 }): ValidationResult => {
   if (!formData.name || !formData.name.trim()) {
     return {
@@ -69,9 +69,9 @@ export const validateRuleForm = (formData: {
 export const validateRuleBuilder = (builder: {
   field: string
   operator: string
-  value: any
+  value: string | number
 }): ValidationResult => {
-  const { field, operator, value } = builder
+  const { field, value } = builder
 
   if (field === 'amount') {
     if (typeof value !== 'number' || isNaN(value)) {

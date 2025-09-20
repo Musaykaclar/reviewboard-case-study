@@ -4,7 +4,6 @@ import { useState } from "react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { Package } from "lucide-react"
-import { Status } from "@prisma/client"
 import { CSS_CLASSES } from "../../../constants"
 import { useItems } from "../../../hooks/useItems"
 import { filterItems, FilterOptions } from "../../../utils/filters"
@@ -17,7 +16,7 @@ import "../../../app/globals.css"
 export default function DashboardPage() {
   const { data: session } = useSession()
   const router = useRouter()
-  const { items, loading, fetchItems } = useItems()
+  const { items, fetchItems } = useItems()
   
   // Filtre state'ini burada yönet
   const [filters, setFilters] = useState<FilterOptions>({
@@ -39,7 +38,7 @@ export default function DashboardPage() {
     )
   }
 
-  const handleItemClick = (item: any) => {
+  const handleItemClick = (item: { id: string }) => {
     router.push(`/dashboard/items/${item.id}`)
   }
 
@@ -69,7 +68,7 @@ export default function DashboardPage() {
             onClick={() => router.push('/dashboard')}
             className="px-4 py-2 rounded-md border border-gray-200 text-gray-700 hover:bg-gray-50"
           >
-            Dashboard'a Dön
+            Dashboard&apos;a Dön
           </button>
         </div>
       </div>

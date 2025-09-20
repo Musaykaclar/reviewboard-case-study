@@ -15,6 +15,7 @@ model User {
   emailVerified DateTime?
   items     Item[]
   audits    Audit[]
+  rules     Rule[]      // 🔥 eklendi - kullanıcının oluşturduğu kurallar
   accounts  Account[]   // 🔥 eklendi
   sessions  Session[]   // 🔥 eklendi
   createdAt DateTime  @default(now())
@@ -60,6 +61,10 @@ model Rule {
   priority    Int      @default(0) // Higher priority rules run first
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  
+  // Rule'u hangi kullanıcının oluşturduğu
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String?
 }
 model Account {
   id                 String  @id @default(cuid())

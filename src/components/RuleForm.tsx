@@ -1,7 +1,7 @@
 "use client"
 
 import { Plus, Save } from "lucide-react"
-import { CSS_CLASSES, RULE_FIELD_TYPES, OPERATOR_OPTIONS, RULE_OPERATORS } from "../constants"
+import { CSS_CLASSES, RULE_FIELD_TYPES, OPERATOR_OPTIONS } from "../constants"
 import { useRules } from "../hooks/useRules"
 
 export default function RuleForm() {
@@ -23,12 +23,12 @@ export default function RuleForm() {
     }
   }
 
-  const handleFormChange = (field: string, value: any) => {
+  const handleFormChange = (field: string, value: string | number | boolean) => {
     setForm(prev => ({ ...prev, [field]: value }))
     if (error) clearError()
   }
 
-  const handleBuilderChange = (field: string, value: any) => {
+  const handleBuilderChange = (field: string, value: string | number) => {
     setBuilder(prev => ({ ...prev, [field]: value }))
     if (error) clearError()
   }
@@ -90,7 +90,7 @@ export default function RuleForm() {
               <input
                 className={`${CSS_CLASSES.DASHBOARD_INPUT} col-span-3`}
                 type="number"
-                value={builder.value as any}
+                value={builder.value as number}
                 onChange={(e) => handleBuilderChange('value', Number(e.target.value))}
               />
               <input
@@ -124,7 +124,7 @@ export default function RuleForm() {
             <input
               className={`${CSS_CLASSES.DASHBOARD_INPUT} w-full`}
               type="text"
-              value={builder.value as any}
+              value={builder.value as string}
               onChange={(e) => handleBuilderChange('value', e.target.value)}
               placeholder={builder.field === RULE_FIELD_TYPES.TAGS ? 'ör. urgent' : 'ör. suspicious / invoice'}
             />

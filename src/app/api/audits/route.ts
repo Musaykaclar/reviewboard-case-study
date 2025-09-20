@@ -28,7 +28,7 @@ export async function GET(req: Request) {
     const userItemIds = userItems.map(item => item.id)
 
     // Filtreleri hazırla
-    const whereClause: any = {
+    const whereClause: Record<string, unknown> = {
       itemId: {
         in: userItemIds,
       },

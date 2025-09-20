@@ -1,21 +1,35 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "../../../../../lib/prisma"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 
 // PATCH /api/rules/:id - kural güncelle
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, context: { params: { id: string } }) {
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const id = params.id
-    const data = await req.json()
+    const { id } = context.params
+    const data = await request.json()
+
+    // Önce kuralı bul ve yetki kontrolü yap
+    const existingRule = await prisma.rule.findUnique({
+      where: { id }
+    })
+
+    if (!existingRule) {
+      return NextResponse.json({ error: "Rule not found" }, { status: 404 })
+    }
+
+    // Kullanıcının bu kuralı düzenleme yetkisi var mı?
+    if (existingRule.userId && existingRule.userId !== session.user?.id) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
 
     if (data.condition !== undefined) {
-      let parsed: any
+      let parsed: Record<string, unknown>
       try {
         parsed = JSON.parse(data.condition)
         if (!parsed || typeof parsed !== 'object') throw new Error('invalid')
@@ -71,14 +85,28 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 }
 
 // DELETE /api/rules/:id - kural sil
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: { params: { id: string } }) {
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const id = params.id
+    const { id } = context.params
+
+    // Önce kuralı bul ve yetki kontrolü yap
+    const existingRule = await prisma.rule.findUnique({
+      where: { id }
+    })
+
+    if (!existingRule) {
+      return NextResponse.json({ error: "Rule not found" }, { status: 404 })
+    }
+
+    // Kullanıcının bu kuralı silme yetkisi var mı?
+    if (existingRule.userId && existingRule.userId !== session.user?.id) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
 
     await prisma.rule.delete({ where: { id } })
     return NextResponse.json({ success: true })

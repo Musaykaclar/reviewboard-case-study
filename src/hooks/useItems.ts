@@ -29,6 +29,7 @@ export const useItems = (): UseItemsReturn => {
     
     try {
       const res = await fetch(API_ENDPOINTS.ITEMS)
+      if (!res.ok) throw new Error("Failed to fetch items")
       const data = await res.json()
       
       if (Array.isArray(data)) {

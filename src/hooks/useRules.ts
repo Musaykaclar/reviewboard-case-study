@@ -133,6 +133,8 @@ export const useRules = (): UseRulesReturn => {
       if (res.ok) {
         const updated = await res.json()
         setRules(prev => prev.map(r => r.id === rule.id ? updated : r))
+        // Custom event dispatch
+        window.dispatchEvent(new CustomEvent('ruleUpdated', { detail: updated }))
       }
     } catch (error) {
       console.error('Toggle active error:', error)
@@ -154,6 +156,8 @@ export const useRules = (): UseRulesReturn => {
           prev.map(r => r.id === rule.id ? updated : r)
             .sort((a, b) => b.priority - a.priority)
         )
+        // Custom event dispatch
+        window.dispatchEvent(new CustomEvent('ruleUpdated', { detail: updated }))
       }
     } catch (error) {
       console.error('Update priority error:', error)

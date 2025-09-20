@@ -1,5 +1,5 @@
 "use client"
-import { signIn, signOut, useSession } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import { Github, Mail, Star, ArrowRight, Sparkles } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -117,7 +117,7 @@ export default function HomePage() {
               <h2 className="text-2xl font-bold text-gray-800 mb-2">
                 Yönlendiriliyor...
               </h2>
-              <p className="text-gray-600">Dashboard'a gidiyorsunuz 🚀</p>
+              <p className="text-gray-600">Dashboard&apos;a gidiyorsunuz</p>
             </div>
           </div>
         )}

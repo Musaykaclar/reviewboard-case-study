@@ -162,7 +162,7 @@ export default function AuditsPage() {
               onClick={() => router.push('/dashboard')}
               className="px-4 py-2 rounded-md border border-gray-200 text-gray-700 hover:bg-gray-50"
             >
-              Dashboard'a Dön
+              Dashboard&apos;a Dön
             </button>
           </div>
         </div>

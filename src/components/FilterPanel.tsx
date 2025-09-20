@@ -11,7 +11,7 @@ export interface FilterPanelProps {
 }
 
 export default function FilterPanel({ filters, onFiltersChange }: FilterPanelProps) {
-  const updateFilter = (key: keyof FilterOptions, value: any) => {
+  const updateFilter = (key: keyof FilterOptions, value: string) => {
     onFiltersChange({ ...filters, [key]: value })
   }
 

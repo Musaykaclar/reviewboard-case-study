@@ -12,6 +12,12 @@ export async function GET() {
     }
 
     const rules = await prisma.rule.findMany({
+      where: {
+        OR: [
+          { userId: session.user?.id }, // Kullanıcının kendi kuralları
+          { userId: null } // Global kurallar (geriye dönük uyumluluk)
+        ]
+      },
       orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
     })
 
@@ -37,7 +43,7 @@ export async function POST(req: Request) {
     }
 
     // condition JSON doğrulama + alan/operatör kontrolü
-    let parsed: any
+    let parsed: Record<string, unknown>
     try {
       parsed = JSON.parse(condition)
       if (!parsed || typeof parsed !== 'object') throw new Error('invalid')
@@ -73,7 +79,15 @@ export async function POST(req: Request) {
     }
 
     const rule = await prisma.rule.create({
-      data: { name, description, condition, score, isActive, priority },
+      data: { 
+        name, 
+        description, 
+        condition, 
+        score, 
+        isActive, 
+        priority,
+        userId: session.user?.id 
+      },
     })
 
     return NextResponse.json(rule, { status: 201 })

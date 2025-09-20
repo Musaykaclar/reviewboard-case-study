@@ -1,4 +1,3 @@
-import { Item } from "@prisma/client"
 import { STATUS_COLORS, RISK_SCORE_COLORS } from "../constants"
 
 // Para birimi formatı
