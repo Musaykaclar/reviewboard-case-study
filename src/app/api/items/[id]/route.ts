@@ -6,13 +6,14 @@ import { Status } from "@prisma/client"
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-    const { id: itemId } = context.params
+    const params = await context.params
+    const { id: itemId } = params
 
     const item = await prisma.item.findUnique({ where: { id: itemId } })
     if (!item) return NextResponse.json({ error: "Item not found" }, { status: 404 })
@@ -28,13 +29,14 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
     if (!session || !session.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-    const { id: itemId } = context.params
+    const params = await context.params
+    const { id: itemId } = params
     const { status, title, description, amount, tags } = await request.json()
 
     const existingItem = await prisma.item.findUnique({ where: { id: itemId } })
@@ -73,13 +75,14 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
     if (!session || !session.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-    const { id: itemId } = context.params
+    const params = await context.params
+    const { id: itemId } = params
 
     const item = await prisma.item.findUnique({ where: { id: itemId } })
     if (!item) return NextResponse.json({ error: "Item not found" }, { status: 404 })

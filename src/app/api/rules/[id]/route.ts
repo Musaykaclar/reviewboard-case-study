@@ -4,14 +4,18 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 
 // PATCH /api/rules/:id - kural güncelle
-export async function PATCH(request: NextRequest, context: { params: { id: string } }) {
+export async function PATCH(
+  request: NextRequest, 
+  context: { params: Promise<{ id: string }> }
+) {
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { id } = context.params
+    const params = await context.params
+    const { id } = params
     const data = await request.json()
 
     // Önce kuralı bul ve yetki kontrolü yap
@@ -85,14 +89,18 @@ export async function PATCH(request: NextRequest, context: { params: { id: strin
 }
 
 // DELETE /api/rules/:id - kural sil
-export async function DELETE(request: NextRequest, context: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest, 
+  context: { params: Promise<{ id: string }> }
+) {
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { id } = context.params
+    const params = await context.params
+    const { id } = params
 
     // Önce kuralı bul ve yetki kontrolü yap
     const existingRule = await prisma.rule.findUnique({
@@ -115,5 +123,3 @@ export async function DELETE(request: NextRequest, context: { params: { id: stri
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
-
-

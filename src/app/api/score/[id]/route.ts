@@ -4,12 +4,10 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { calculateRiskByRules } from "../../../../../lib/rules"
 
-// Risk skoru hesaplama artık Rule motoruna taşındı
-
 // POST - Risk score hesapla ve güncelle
 export async function POST(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -17,7 +15,8 @@ export async function POST(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { id: itemId } = context.params
+    const params = await context.params
+    const { id: itemId } = params
 
     // Item'ı bul
     const item = await prisma.item.findUnique({
@@ -71,8 +70,8 @@ export async function POST(
 
 // GET - Mevcut risk score'u döndür
 export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -80,7 +79,8 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const itemId = params.id
+    const params = await context.params
+    const { id: itemId } = params
 
     const item = await prisma.item.findUnique({
       where: { id: itemId },
@@ -91,7 +91,7 @@ export async function GET(
         status: true,
         amount: true,
         tags: true,
-      userId: true,
+        userId: true,
       },
     })
 
