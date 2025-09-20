@@ -13,7 +13,7 @@ import "../../globals.css"
 export default function RulesPage() {
   const { data: session } = useSession()
   const router = useRouter()
-  const { rules, loading } = useRules()
+  const { rules, loading, fetchRules, form, builder, submitting, error, setForm, setBuilder, createRule, clearError, toggleActive, updatePriority, removeRule } = useRules()
 
   if (!session) {
     return (
@@ -56,11 +56,26 @@ export default function RulesPage() {
         </div>
 
         {/* Yeni Kural */}
-        <RuleForm />
+        <RuleForm 
+          form={form}
+          builder={builder}
+          submitting={submitting}
+          error={error}
+          setForm={setForm}
+          setBuilder={setBuilder}
+          createRule={createRule}
+          clearError={clearError}
+        />
 
         {/* Rules List */}
         <div className={CSS_CLASSES.DASHBOARD_FORM_CARD}>
-          <RuleList rules={rules} loading={loading} />
+          <RuleList 
+            rules={rules} 
+            loading={loading}
+            toggleActive={toggleActive}
+            updatePriority={updatePriority}
+            removeRule={removeRule}
+          />
         </div>
       </div>
     </div>

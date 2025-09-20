@@ -39,7 +39,7 @@ export const validateItemForm = (formData: {
 export const validateRuleForm = (formData: {
   name: string
   score: number
-  condition: string
+  condition?: string
 }): ValidationResult => {
   if (!formData.name || !formData.name.trim()) {
     return {
@@ -52,13 +52,6 @@ export const validateRuleForm = (formData: {
     return {
       isValid: false,
       message: 'Skor 0-100 arasında olmalı'
-    }
-  }
-
-  if (!formData.condition || typeof formData.condition !== 'object') {
-    return {
-      isValid: false,
-      message: 'Geçerli bir kural koşulu seçin'
     }
   }
 

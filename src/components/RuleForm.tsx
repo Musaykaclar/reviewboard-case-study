@@ -1,20 +1,37 @@
 "use client"
 
 import { Plus, Save } from "lucide-react"
-import { CSS_CLASSES, RULE_FIELD_TYPES, OPERATOR_OPTIONS } from "../constants"
-import { useRules } from "../hooks/useRules"
+import { CSS_CLASSES, RULE_FIELD_TYPES, OPERATOR_OPTIONS, DEFAULT_FORM_VALUES } from "../constants"
 
-export default function RuleForm() {
-  const {
-    form,
-    builder,
-    submitting,
-    error,
-    setForm,
-    setBuilder,
-    createRule,
-    clearError,
-  } = useRules()
+interface RuleFormProps {
+  form: typeof DEFAULT_FORM_VALUES.RULE
+  builder: {
+    field: string
+    operator: string
+    value: string | number
+  }
+  submitting: boolean
+  error: string | null
+  setForm: React.Dispatch<React.SetStateAction<typeof DEFAULT_FORM_VALUES.RULE>>
+  setBuilder: React.Dispatch<React.SetStateAction<{
+    field: string
+    operator: string
+    value: string | number
+  }>>
+  createRule: () => Promise<boolean>
+  clearError: () => void
+}
+
+export default function RuleForm({ 
+  form, 
+  builder, 
+  submitting, 
+  error, 
+  setForm, 
+  setBuilder, 
+  createRule, 
+  clearError 
+}: RuleFormProps) {
 
   const handleSubmit = async () => {
     const success = await createRule()

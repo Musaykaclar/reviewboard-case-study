@@ -6,9 +6,12 @@ import RuleCard from "./RuleCard"
 export interface RuleListProps {
   rules: Rule[]
   loading: boolean
+  toggleActive: (rule: Rule) => Promise<void>
+  updatePriority: (rule: Rule, delta: number) => Promise<void>
+  removeRule: (rule: Rule) => Promise<boolean>
 }
 
-export default function RuleList({ rules, loading }: RuleListProps) {
+export default function RuleList({ rules, loading, toggleActive, updatePriority, removeRule }: RuleListProps) {
   if (loading) {
     return (
       <div className="text-center py-8 text-gray-600">
@@ -28,7 +31,13 @@ export default function RuleList({ rules, loading }: RuleListProps) {
   return (
     <div className="space-y-3">
       {rules.map((rule) => (
-        <RuleCard key={rule.id} rule={rule} />
+        <RuleCard 
+          key={rule.id} 
+          rule={rule}
+          toggleActive={toggleActive}
+          updatePriority={updatePriority}
+          removeRule={removeRule}
+        />
       ))}
     </div>
   )

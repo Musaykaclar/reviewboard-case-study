@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { Trash2, CheckCircle2, XCircle, Settings, Target, BarChart3, ChevronDown, ChevronUp, Code, Edit3, Save, X } from "lucide-react"
-import { useRules } from "../hooks/useRules"
 import "../app/globals.css"
 
 export interface Rule {
@@ -18,9 +17,12 @@ export interface Rule {
 
 export interface RuleCardProps {
   rule: Rule
+  toggleActive: (rule: Rule) => Promise<void>
+  updatePriority: (rule: Rule, delta: number) => Promise<void>
+  removeRule: (rule: Rule) => Promise<boolean>
 }
 
-export default function RuleCard({ rule }: RuleCardProps) {
+export default function RuleCard({ rule, toggleActive, updatePriority, removeRule }: RuleCardProps) {
   const [expandedRuleId, setExpandedRuleId] = useState<string | null>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [editForm, setEditForm] = useState({
@@ -30,7 +32,7 @@ export default function RuleCard({ rule }: RuleCardProps) {
     priority: rule.priority,
     isActive: rule.isActive
   })
-  const { toggleActive, updatePriority, removeRule } = useRules()
+  // Props'tan gelen fonksiyonları kullanıyoruz
 
   let condition: Record<string, unknown> | null = null
   try {
@@ -236,12 +238,12 @@ export default function RuleCard({ rule }: RuleCardProps) {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                 <div className="bg-white rounded-lg p-4 border border-gray-200/50 shadow-sm hover:shadow-md transition-shadow">
                   <div className="text-xs font-semibold text-indigo-600 mb-2">Alan</div>
-                  <div className="font-bold text-gray-800 text-sm">{condition.field}</div>
+                  <div className="font-bold text-gray-800 text-sm">{String(condition.field)}</div>
                 </div>
                 
                 <div className="bg-white rounded-lg p-4 border border-gray-200/50 shadow-sm hover:shadow-md transition-shadow">
                   <div className="text-xs font-semibold text-purple-600 mb-2">Operatör</div>
-                  <div className="font-bold text-gray-800 text-sm">{condition.operator}</div>
+                  <div className="font-bold text-gray-800 text-sm">{String(condition.operator)}</div>
                 </div>
                 
                 <div className="bg-white rounded-lg p-4 border border-gray-200/50 shadow-sm hover:shadow-md transition-shadow">

@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     }
 
     const allowedFields = ["amount", "tags", "description", "status", "title"]
-    if (!allowedFields.includes(parsed.field)) {
+    if (!allowedFields.includes(String(parsed.field))) {
       return NextResponse.json({ error: "field geçersiz. Geçerli: amount,tags,description,status,title" }, { status: 400 })
     }
 
@@ -65,8 +65,11 @@ export async function POST(req: Request) {
     if (field === 'amount' && !numericOps.includes(operator)) {
       return NextResponse.json({ error: "amount için operator: >,>=,<,<=,==" }, { status: 400 })
     }
-    if ((field === 'description' || field === 'title' || field === 'tags') && !textOps.includes(operator) && !(field !== 'tags' && operator === '==')) {
-      return NextResponse.json({ error: `${field} için operator: includes veya contains` }, { status: 400 })
+    if ((field === 'description' || field === 'title') && !textOps.includes(operator) && operator !== '==') {
+      return NextResponse.json({ error: `${field} için operator: includes, contains veya ==` }, { status: 400 })
+    }
+    if (field === 'tags' && !textOps.includes(operator)) {
+      return NextResponse.json({ error: 'tags için operator: includes veya contains' }, { status: 400 })
     }
     if (field === 'status') {
       const statuses = ["NEW", "IN_REVIEW", "APPROVED", "REJECTED"]
