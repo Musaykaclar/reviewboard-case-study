@@ -13,6 +13,7 @@ import {
   Filter,
   Search
 } from "lucide-react"
+import { CSS_CLASSES } from "@/constants"
 
 interface AuditWithDetails extends Audit {
   item?: {
@@ -159,11 +160,11 @@ export default function AuditsPage() {
               <p className="text-gray-600">Tüm sistem değişikliklerini takip edin</p>
             </div>
             <button
-              onClick={() => router.push('/dashboard')}
-              className="px-4 py-2 rounded-md border border-gray-200 text-gray-700 hover:bg-gray-50"
-            >
-              Dashboard&apos;a Dön
-            </button>
+      onClick={() => router.push('/dashboard')}
+      className={`${CSS_CLASSES.DASHBOARD_ADD_BTN} flex items-center gap-2`}
+    >
+      Dashboard&apos;a Dön
+    </button>
           </div>
         </div>
 

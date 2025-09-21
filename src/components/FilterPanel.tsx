@@ -88,7 +88,7 @@ export default function FilterPanel({ filters, onFiltersChange }: FilterPanelPro
       <div className="mt-4">
         <button
           onClick={clearAllFilters}
-          className="px-4 py-2 rounded-md border border-gray-200 text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+          className={`${CSS_CLASSES.DASHBOARD_ADD_BTN} flex items-center gap-2 mt-4`}
         >
           <X style={{ width: '16px', height: '16px' }} />
           Temizle

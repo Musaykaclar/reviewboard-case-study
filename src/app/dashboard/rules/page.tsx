@@ -35,25 +35,30 @@ export default function RulesPage() {
 
       <div className="relative z-10 max-w-5xl mx-auto">
         {/* Header */}
-        <div className={`${CSS_CLASSES.DASHBOARD_FORM_CARD} mb-6`}>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => router.push('/dashboard')}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <ArrowLeft className="w-6 h-6 text-gray-600" />
-              </button>
-              <div>
-                <h1 className={`${CSS_CLASSES.DASHBOARD_FORM_TITLE} flex items-center gap-2`}>
-                  <Settings className="w-6 h-6" />
-                  Rules
-                </h1>
-                <p className="text-gray-600">Risk skorunu etkileyen kuralları yönetin</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div className="relative z-10 max-w-5xl mx-auto">
+  {/* Header */}
+  <div className={`${CSS_CLASSES.DASHBOARD_FORM_CARD} mb-6 flex items-center justify-between`}>
+    <div className="flex items-center gap-4">
+      <Settings className="w-6 h-6" />
+      <div>
+        <h1 className={`${CSS_CLASSES.DASHBOARD_FORM_TITLE} flex items-center gap-2`}>
+          Rules
+        </h1>
+        <p className="text-gray-600">Risk skorunu etkileyen kuralları yönetin</p>
+      </div>
+    </div>
+
+    {/* Sağ taraf: Button */}
+    <button
+      onClick={() => router.push('/dashboard')}
+      className={`${CSS_CLASSES.DASHBOARD_ADD_BTN} flex items-center gap-2`}
+    >
+      Dashboard&apos;a Dön
+    </button>
+    
+  </div>
+</div>
+
 
         {/* Yeni Kural */}
         <RuleForm 

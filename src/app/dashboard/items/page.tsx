@@ -66,12 +66,13 @@ export default function DashboardPage() {
           <h1 className={CSS_CLASSES.DASHBOARD_FORM_TITLE}>Items</h1>
           <button
             onClick={() => router.push('/dashboard')}
-            className="px-4 py-2 rounded-md border border-gray-200 text-gray-700 hover:bg-gray-50"
+            className={`${CSS_CLASSES.DASHBOARD_ADD_BTN} flex items-center gap-2 mt-4`}
           >
             Dashboard&apos;a Dön
           </button>
         </div>
       </div>
+      
 
       {/* Add Item Form */}
       <ItemForm onItemAdded={handleItemAdded} />

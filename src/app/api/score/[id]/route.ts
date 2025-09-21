@@ -11,60 +11,31 @@ export async function POST(
 ) {
   try {
     const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-    const params = await context.params
-    const { id: itemId } = params
+    const { id: itemId } = await context.params
+    const item = await prisma.item.findUnique({ where: { id: itemId } })
+    if (!item) return NextResponse.json({ error: "Item not found" }, { status: 404 })
+    if (item.userId !== session.user?.id) return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
-    // Item'ı bul
-    const item = await prisma.item.findUnique({
-      where: { id: itemId },
-    })
-
-    if (!item) {
-      return NextResponse.json({ error: "Item not found" }, { status: 404 })
-    }
-
-    // Kullanıcının item'ına erişimi var mı kontrol et
-    if (item.userId !== session.user?.id) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-    }
-
-    // Risk score hesapla (aktif kurallar)
     const newRiskScore = await calculateRiskByRules(item)
+    const updatedItem = await prisma.item.update({ where: { id: itemId }, data: { riskScore: newRiskScore } })
 
-    // Item'ı güncelle
-    const updatedItem = await prisma.item.update({
-      where: { id: itemId },
-      data: { riskScore: newRiskScore },
-    })
-
-    // Audit log oluştur
     await prisma.audit.create({
       data: {
         action: 'RISK_SCORE_CALCULATED',
         field: 'riskScore',
         oldValue: item.riskScore.toString(),
         newValue: newRiskScore.toString(),
-        itemId: itemId,
+        itemId,
         userId: session.user.id,
       },
     })
 
-    return NextResponse.json({
-      success: true,
-      item: updatedItem,
-      riskScore: newRiskScore,
-    })
-
+    return NextResponse.json({ success: true, item: updatedItem, riskScore: newRiskScore })
   } catch (error) {
     console.error("Risk score calculation error:", error)
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
 
@@ -75,49 +46,23 @@ export async function GET(
 ) {
   try {
     const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-    const params = await context.params
-    const { id: itemId } = params
-
+    const { id: itemId } = await context.params
     const item = await prisma.item.findUnique({
       where: { id: itemId },
-      select: {
-        id: true,
-        title: true,
-        riskScore: true,
-        status: true,
-        amount: true,
-        tags: true,
-        userId: true,
-      },
+      select: { id: true, title: true, riskScore: true, status: true, amount: true, tags: true, userId: true },
     })
+    if (!item) return NextResponse.json({ error: "Item not found" }, { status: 404 })
+    if (item.userId !== session.user?.id) return NextResponse.json({ error: "Forbidden" }, { status: 403 })
 
-    if (!item) {
-      return NextResponse.json({ error: "Item not found" }, { status: 404 })
-    }
-
-    if (item.userId !== session.user?.id) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-    }
-
-    return NextResponse.json({
-      item,
-      riskLevel: getRiskLevel(item.riskScore),
-    })
-
+    return NextResponse.json({ item, riskLevel: getRiskLevel(item.riskScore) })
   } catch (error) {
     console.error("Get risk score error:", error)
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
 
-// Risk level belirleme fonksiyonu
 function getRiskLevel(score: number): string {
   if (score >= 80) return 'HIGH'
   if (score >= 50) return 'MEDIUM'

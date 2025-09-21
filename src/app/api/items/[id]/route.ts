@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "../../../../../lib/prisma"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { calculateRiskByRules } from "../../../../../lib/rules"
 import { Status } from "@prisma/client"
 
 export async function GET(
@@ -52,18 +53,43 @@ export async function PATCH(
 
     const updatedItem = await prisma.item.update({ where: { id: itemId }, data: updateData })
 
+    // Audit log for changed fields
     for (const [field, newValue] of Object.entries(updateData)) {
       const oldValue = existingItem[field as keyof typeof existingItem]
+      if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
+        await prisma.audit.create({
+          data: {
+            action: 'ITEM_UPDATED',
+            field,
+            oldValue: oldValue ? String(oldValue) : null,
+            newValue: newValue ? String(newValue) : null,
+            itemId,
+            userId: session.user.id,
+          },
+        })
+      }
+    }
+
+    // Risk skorunu yeniden hesapla
+    const newRiskScore = await calculateRiskByRules(updatedItem)
+    if (newRiskScore !== updatedItem.riskScore) {
+      const finalItem = await prisma.item.update({
+        where: { id: itemId },
+        data: { riskScore: newRiskScore },
+      })
+
       await prisma.audit.create({
         data: {
-          action: 'ITEM_UPDATED',
-          field,
-          oldValue: oldValue ? String(oldValue) : null,
-          newValue: newValue ? String(newValue) : null,
+          action: "RISK_SCORE_CALCULATED",
+          field: "riskScore",
+          oldValue: String(updatedItem.riskScore),
+          newValue: String(newRiskScore),
           itemId,
           userId: session.user.id,
         },
       })
+
+      return NextResponse.json(finalItem)
     }
 
     return NextResponse.json(updatedItem)
