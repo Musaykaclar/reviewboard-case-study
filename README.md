@@ -124,12 +124,8 @@ npm run dev
 
 
 The app will be available at:
-👉 http://localhost:3000⚙️ Installation & Setup
+👉 http://localhost:3000 or https://reviewboard-case-study.vercel.app
 
 
-
-
-The app will be available at:
-👉 http://localhost:3000
 
 
