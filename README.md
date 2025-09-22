@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ReviewBoard Case Study
 
-## Getting Started
+A full-stack web application built with **Next.js 14**, **TypeScript**, **Prisma**, and **NextAuth.js**.  
+The project is designed as a **review and risk scoring platform**, where users can manage items, apply custom rules, and calculate risk scores.  
 
-First, run the development server:
+---
+
+## 🚀 Features
+
+- **Authentication**
+  - GitHub and Email login via NextAuth.js
+  - Secure session handling
+- **Dashboard**
+  - View and manage items
+  - Risk score calculation
+- **Rules Engine**
+  - Custom rules affecting risk scores
+  - Rule management (CRUD)
+- **Contracts & Chatbot**
+  - Thread-based chatbot for generating contracts
+  - Multilingual support (tr, en, es, it, fr, pt, ru)
+  - Contract editing, signing, and PDF export
+- **Email Support**
+  - Send contracts as PDF to email
+- **UI/UX**
+  - TailwindCSS for styling
+  - Responsive and clean layout
+  - Shadcn UI components
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**
+  - Next.js 14 (App Router, Server Components, API Routes)
+  - React
+  - TailwindCSS + Shadcn UI
+  - Lucide Icons
+- **Backend**
+  - Prisma ORM
+  - PostgreSQL Database
+  - Parse Server for contract storage
+- **Authentication**
+  - NextAuth.js (GitHub & Email providers)
+- **PDF Generation**
+  - PDFKit (with Turkish font support)
+- **Internationalization**
+  - next-intl
+  - JSON translation files
+
+---
+
+## 📂 Project Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+reviewboard-case-study/
+│
+├── prisma/                 # Prisma schema & migrations
+│   └── schema.prisma
+│
+├── src/
+│   ├── app/
+│   │   ├── api/            # API Routes
+│   │   │   ├── items/      # Item CRUD
+│   │   │   │   └── route.ts
+│   │   │   └── rules/      # Rule CRUD
+│   │   │       └── route.ts
+│   │   ├── dashboard/      # Dashboard UI
+│   │   ├── chat-sozlesme/  # Contract editor
+│   │   └── page.tsx        # Home Page
+│   │
+│   ├── components/         # Reusable UI components
+│   ├── lib/                # Utilities (Prisma, rules engine, auth)
+│   └── styles/             # Global styles
+│
+├── public/                 # Static assets
+│
+├── .env                    # Environment variables
+├── package.json
+├── tsconfig.json
+└── README.md
