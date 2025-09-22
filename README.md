@@ -80,22 +80,27 @@ reviewboard-case-study/
 ├── tsconfig.json
 └── README.md
 
-``
+````
 
 
 ⚙️ Installation & Setup
 1. Clone the repository
+ ```bash
 git clone https://github.com/your-username/reviewboard-case-study.git
 cd reviewboard-case-study
+````
 
-2. Install dependencies
+3. Install dependencies
+```bash
 npm install
+```
 
-3. Configure environment variables
+5. Configure environment variables
 
 Create a .env file in the root directory:
 
 # Database
+```bash
 DATABASE_URL="postgresql://user:password@localhost:5432/reviewboard"
 
 # NextAuth
@@ -106,52 +111,22 @@ NEXTAUTH_SECRET="your-secret"
 GITHUB_ID="your-github-client-id"
 GITHUB_SECRET="your-github-client-secret"
 
-# Email Provider (e.g., Gmail SMTP)
-EMAIL_SERVER="smtp://your-email@gmail.com:your-app-password@smtp.gmail.com:587"
-EMAIL_FROM="ReviewBoard <your-email@gmail.com>"
-
+```
 4. Setup Prisma
+ ```bash
 npx prisma generate
 npx prisma migrate dev --name init
-
-5. Run the development server
+```
+6. Run the development server
+```bash
 npm run dev
+```
 
 
 The app will be available at:
 👉 http://localhost:3000⚙️ Installation & Setup
-1. Clone the repository
-git clone https://github.com/your-username/reviewboard-case-study.git
-cd reviewboard-case-study
 
-2. Install dependencies
-npm install
 
-3. Configure environment variables
-
-Create a .env file in the root directory:
-
-# Database
-DATABASE_URL="postgresql://user:password@localhost:5432/reviewboard"
-
-# NextAuth
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-secret"
-
-# GitHub OAuth
-GITHUB_ID="your-github-client-id"
-GITHUB_SECRET="your-github-client-secret"
-
-# Email Provider (e.g., Gmail SMTP)
-EMAIL_SERVER="smtp://your-email@gmail.com:your-app-password@smtp.gmail.com:587"
-EMAIL_FROM="ReviewBoard <your-email@gmail.com>"
-
-4. Setup Prisma
-npx prisma generate
-npx prisma migrate dev --name init
-
-5. Run the development server
-npm run dev
 
 
 The app will be available at:
