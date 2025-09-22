@@ -50,37 +50,7 @@ The project is designed as a **review and risk scoring platform**, where users c
 
 ---
 
-## 📂 Project Structure
 
-```bash
-reviewboard-case-study/
-│
-├── prisma/                 # Prisma schema & migrations
-│   └── schema.prisma
-│
-├── src/
-│   ├── app/
-│   │   ├── api/            # API Routes
-│   │   │   ├── items/      # Item CRUD
-│   │   │   │   └── route.ts
-│   │   │   └── rules/      # Rule CRUD
-│   │   │       └── route.ts
-│   │   ├── dashboard/      # Dashboard UI
-│   │   ├── chat-sozlesme/  # Contract editor
-│   │   └── page.tsx        # Home Page
-│   │
-│   ├── components/         # Reusable UI components
-│   ├── lib/                # Utilities (Prisma, rules engine, auth)
-│   └── styles/             # Global styles
-│
-├── public/                 # Static assets
-│
-├── .env                    # Environment variables
-├── package.json
-├── tsconfig.json
-└── README.md
-
-````
 
 
 ⚙️ Installation & Setup
