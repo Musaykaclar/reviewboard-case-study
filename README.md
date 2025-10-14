@@ -16,12 +16,6 @@ The project is designed as a **review and risk scoring platform**, where users c
 - **Rules Engine**
   - Custom rules affecting risk scores
   - Rule management (CRUD)
-- **Contracts & Chatbot**
-  - Thread-based chatbot for generating contracts
-  - Multilingual support (tr, en, es, it, fr, pt, ru)
-  - Contract editing, signing, and PDF export
-- **Email Support**
-  - Send contracts as PDF to email
 - **UI/UX**
   - TailwindCSS for styling
   - Responsive and clean layout
@@ -42,11 +36,6 @@ The project is designed as a **review and risk scoring platform**, where users c
   - Parse Server for contract storage
 - **Authentication**
   - NextAuth.js (GitHub & Email providers)
-- **PDF Generation**
-  - PDFKit (with Turkish font support)
-- **Internationalization**
-  - next-intl
-  - JSON translation files
 
 ---
 
